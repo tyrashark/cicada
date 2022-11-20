@@ -30,9 +30,6 @@ m_mongol = as_tibble(m_mongol) %>% mutate(Instar = as.character(Instar)) %>% mut
 h_fuscata = as_tibble(h_fuscata) %>% mutate(log_head = log(Head), log_thorax = log(Thorax), log_abdomen = log(Abdomen), log_body = log(Body))
 ```
 
-
-
-
 ```{r}
 
 K=5
@@ -73,55 +70,5 @@ for(i in 1:4){
   print(eval(parse(text = var_name))$criteria)
   curve(eval(parse(text = var_name))$density(x), from = -1.5, to = 2.5, main = paste("Estimated density of Hypothesis", i, "for H. fuscata"))
 }
-
-
-x = 1:10
-
-k=NULL
-x[!(1:10 %in% k)]
-
-
-library(mclust)
-?Mclust
-
-
-
-```
-
-
-
-```{r}
-x = m_mongol$log_trans
-?kmeans
-result_kmeans = kmeans(x, K, iter.max = 100, nstart = 1000)
-result_kmeans = kmeans(x, K, iter.max = 100, centers = sort(result_kmeans$centers))
-mu0 = result_kmeans$centers
-n_K = as.vector(table(result_kmeans$cluster))
-p0 = n_K/351
-p0
-
-nu0 = 1/(result_kmeans$withinss / (n_K-1))
-
-K=5
-
-sort_x = sort(x)
-result = hclust(dist(sort_x), method = "average")
-
-n_K = as.vector(table(cutree(result, k=K)))
-
-mu0 = vector("numeric", K)
-s.var = vector("numeric", K)
-for(k in 1:K){
-  mu0[k] = mean(sort_x[cutree(result, k=K) == k])
-  s.var[k] = var(sort_x[cutree(result, k=K) == k])
-}
-
-(n-K)/sum(s.var * (n_K-1))
-
-nu0 = 1/s.var
-
-
-
-
 
 ```
