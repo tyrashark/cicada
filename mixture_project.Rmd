@@ -1,0 +1,127 @@
+---
+title: "Cicada project"
+author: "Sungmin Ji"
+date: '2022-11-20'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+rm(list = ls())
+source("functions.R")
+
+library(ggplot2)
+library(tidyverse)
+
+m_mongol = read.csv("M_mongolica_data.csv", header=T)
+h_fuscata = read.csv("Raw_H_fuscata_data.csv", header=T)
+
+m_mongol = as_tibble(m_mongol) %>% mutate(Instar = as.character(Instar)) %>% mutate(log_trans = log(Head.width))
+
+h_fuscata = as_tibble(h_fuscata) %>% mutate(log_head = log(Head), log_thorax = log(Thorax), log_abdomen = log(Abdomen), log_body = log(Body))
+```
+
+
+
+
+```{r}
+
+K=5
+p0 = rep(1/K, K); mu0 = seq(-1, 2, length = K); nu0 = rep(1, K)
+
+#hypothesis = 1
+#diff(output$param[4:6])
+
+hist(m_mongol$Head.width, breaks = 30)
+hist(m_mongol$log_trans, breaks = 30)
+var(m_mongol$log_trans)
+
+
+h1 = ECM(m_mongol$log_trans, K=K, p0,mu0,nu0, initial = "select", dyar = F, commonvar = F, delete = c(1,2))
+h1$x_del
+
+m_mongol$log_trans
+
+h2 = ECM(m_mongol$log_trans, K=K, p0,mu0,nu0[1], initial = "select", dyar = F, commonvar = T, delete = c(1,2))
+h3 = ECM(m_mongol$log_trans, K=K, p0,mu0,nu0, initial = "select", dyar = T, commonvar = F, delete = c(1,2))
+h4 = ECM(m_mongol$log_trans, K=K, p0,mu0,nu0[1], initial = "select", dyar = T, commonvar = T, delete = c(1,2))
+
+for(i in 1:4){
+  var_name = paste0("h", i)
+  cat(var_name)
+  print(eval(parse(text = var_name))$criteria)
+  curve(eval(parse(text = var_name))$density(x), from = -1.5, to = 2.5, main = paste("Estimated density of Hypothesis", i, "for M. mongolia"))
+}
+
+h1 = ECM(h_fuscata$log_head, K=K, initial = "kmeans", dyar = F, commonvar = F)
+h2 = ECM(h_fuscata$log_head, K=K, initial = "kmeans", dyar = F, commonvar = T)
+h3 = ECM(h_fuscata$log_head, K=K, initial = "kmeans", dyar = T, commonvar = F)
+h4 = ECM(h_fuscata$log_head, K=K, initial = "kmeans", dyar = T, commonvar = T)
+
+for(i in 1:4){
+  var_name = paste0("h", i)
+  cat(var_name)
+  print(eval(parse(text = var_name))$criteria)
+  curve(eval(parse(text = var_name))$density(x), from = -1.5, to = 2.5, main = paste("Estimated density of Hypothesis", i, "for H. fuscata"))
+}
+
+
+x = 1:10
+
+k=NULL
+x[!(1:10 %in% k)]
+
+
+library(mclust)
+?Mclust
+
+
+
+```
+
+
+
+```{r}
+x = m_mongol$log_trans
+?kmeans
+result_kmeans = kmeans(x, K, iter.max = 100, nstart = 1000)
+result_kmeans = kmeans(x, K, iter.max = 100, centers = sort(result_kmeans$centers))
+mu0 = result_kmeans$centers
+n_K = as.vector(table(result_kmeans$cluster))
+p0 = n_K/351
+p0
+
+nu0 = 1/(result_kmeans$withinss / (n_K-1))
+
+K=5
+
+sort_x = sort(x)
+result = hclust(dist(sort_x), method = "average")
+
+n_K = as.vector(table(cutree(result, k=K)))
+
+mu0 = vector("numeric", K)
+s.var = vector("numeric", K)
+for(k in 1:K){
+  mu0[k] = mean(sort_x[cutree(result, k=K) == k])
+  s.var[k] = var(sort_x[cutree(result, k=K) == k])
+}
+
+(n-K)/sum(s.var * (n_K-1))
+
+nu0 = 1/s.var
+
+
+
+
+
+```
