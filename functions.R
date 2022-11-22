@@ -249,11 +249,16 @@ ECM <- function(x, K, p0=NULL, mu0=NULL, nu0=NULL, initial = c("kmeans", "hclust
   
   loglikelihood = sum(log(f_obs_v(x, p_t, mu_t, nu_t)))  
   BIC = -2*loglikelihood + npara*log(n)
+                       
+  z_max = apply(z_hat, 1, which.max)
+  Z_map = matrix(F, nrow = n, ncol = K)
   
-  z_max = apply(z_hat, 1, max)
-  Z_map = matrix(z_max, nrow = n, ncol = K, byrow = F) == z_hat
+  Z_map = t(mapply(FUN = function(z, Z){
+              Z[z] = T
+              return(Z)
+              }, z_max, split(Z_map, row(Z_map))))
   
-  ICL = BIC - 2*sum(Z_map[Z_map == T] * log(z_hat[Z_map == T]))
+  ICL = BIC - 2*sum(log(z_hat[Z_map]))                     
   
   names(BIC) = "BIC"
   names(ICL) = "ICL"
