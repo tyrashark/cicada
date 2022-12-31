@@ -722,36 +722,23 @@ dfcomp = NULL
 dfa0.05_1 = dfa0.05
 dfa0.1_1 = dfa0.1
 
-#for(i in 1:12){
-#dfa0.05[nrow(dfa0.05)+1,] = hypo_test(eval(parse(text = var_list[i])), alpha = 0.05, first = "h3")
-#dfa0.1[nrow(dfa0.1)+1,] = hypo_test(eval(parse(text = var_list[i])), alpha = 0.1, first = "h3")
-#
-#dfa0.05_1[nrow(dfa0.05_1)+1,] = hypo_test(eval(parse(text = var_list[i])), alpha = 0.05, first = "h2")
-#dfa0.1_1[nrow(dfa0.1_1)+1,] = hypo_test(eval(parse(text = var_list[i])), alpha = 0.1, first = "h2")
-#
-#temp = minimize_ICL(eval(parse(text = var_list2[i])))
-#dfICLh[nrow(dfICLh)+1, ] = temp$min_hypo
-#dfcomp = rbind(dfcomp, temp$selection)
-#}
-
 odd.05 = NULL
 odd.10 = NULL
 odd.05_1 = NULL
 odd.10_1 = NULL
 
 for(i in 1:12){
-  temp = hypo_test2(eval(parse(text = var_list[i])), alpha = 0.05, adj.method = "bonferroni")
+  temp = hypo_test(eval(parse(text = var_list[i])), alpha = 0.05, adj.method = "bonferroni")
   dfa0.05[nrow(dfa0.05)+1,] = temp$hypo
 
-  temp = hypo_test2(eval(parse(text = var_list[i])), alpha = 0.1, adj.method = "bonferroni")
+  temp = hypo_test(eval(parse(text = var_list[i])), alpha = 0.1, adj.method = "bonferroni")
   dfa0.1[nrow(dfa0.1)+1,] = temp$hypo
  
   
-  temp = hypo_test2(eval(parse(text = var_list[i])), alpha = 0.05, adj.method = "punzo")
+  temp = hypo_test(eval(parse(text = var_list[i])), alpha = 0.05, adj.method = "punzo")
   dfa0.05_1[nrow(dfa0.05_1)+1,] = temp$hypo
-  temp = hypo_test2(eval(parse(text = var_list[i])), alpha = 0.1, adj.method = "punzo")
+  temp = hypo_test(eval(parse(text = var_list[i])), alpha = 0.1, adj.method = "punzo")
   dfa0.1_1[nrow(dfa0.1_1)+1,] = temp$hypo
-
   
   temp = minimize_ICL(eval(parse(text = var_list2[i])))
   dfICLh[nrow(dfICLh)+1, ] = temp$min_hypo
