@@ -723,11 +723,6 @@ dfcomp = NULL
 dfa0.05_1 = dfa0.05
 dfa0.1_1 = dfa0.1
 
-odd.05 = NULL
-odd.10 = NULL
-odd.05_1 = NULL
-odd.10_1 = NULL
-
 for(i in 1:12){
   temp = hypo_test(eval(parse(text = result_list_boot[i])), alpha = 0.05, adj.method = "bonferroni")
   dfa0.05[nrow(dfa0.05)+1,] = temp$hypo
