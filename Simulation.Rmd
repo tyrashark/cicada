@@ -726,7 +726,6 @@ dfa0.1_1 = dfa0.1
 for(i in 1:12){
   temp = hypo_test(eval(parse(text = result_list_boot[i])), alpha = 0.05, adj.method = "bonferroni")
   dfa0.05[nrow(dfa0.05)+1,] = temp$hypo
-
   temp = hypo_test(eval(parse(text = result_list_boot[i])), alpha = 0.1, adj.method = "bonferroni")
   dfa0.1[nrow(dfa0.1)+1,] = temp$hypo
  
@@ -742,14 +741,15 @@ for(i in 1:12){
 }
 
 
-write.xlsx(cbind(dfa0.05, dfa0.1), file = "simul.xlsx", sheetName = "hypo", append = FALSE)
-write.xlsx(dfICLh, file = "simul.xlsx", sheetName = "ICL", append = TRUE)
-write.xlsx(dfcomp, file = "simul.xlsx", sheetName = "comp", append = TRUE)
-
 
 library(xlsx)
-write.xlsx(cbind(dfa0.05_1, dfa0.1_1), file = "simul_1.xlsx", sheetName = "hypo", append = FALSE)
-write.xlsx(dfICLh, file = "simul_1.xlsx", sheetName = "ICL", append = TRUE)
-write.xlsx(dfcomp, file = "simul_1.xlsx", sheetName = "comp", append = TRUE)
+write.xlsx(cbind(dfa0.05, dfa0.1), file = "simul_bonf.xlsx", sheetName = "hypo", append = FALSE)
+write.xlsx(dfICLh, file = "simul_bonf.xlsx", sheetName = "ICL", append = TRUE)
+write.xlsx(dfcomp, file = "simul_bonf.xlsx", sheetName = "comp", append = TRUE)
+
+
+write.xlsx(cbind(dfa0.05_1, dfa0.1_1), file = "simul_punzo.xlsx", sheetName = "hypo", append = FALSE)
+write.xlsx(dfICLh, file = "simul_punzo.xlsx", sheetName = "ICL", append = TRUE)
+write.xlsx(dfcomp, file = "simul_punzo.xlsx", sheetName = "comp", append = TRUE)
 ```
 
