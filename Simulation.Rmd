@@ -20,34 +20,9 @@ rm(list = ls())
 source("functions3.R")
 library(ggplot2)
 library(tidyverse)
-
-library(mclust)
-m_mongol = read.csv("M_mongolica_data.csv", header=T)
-h_fuscata = read.csv("Raw_H_fuscata_data.csv", header=T)
-
-
-m_mongol$Head.width = m_mongol$Head.width + runif(391, min = -.005, max = 0.005)
-h_fuscata$Head = h_fuscata$Head + runif(359, min = -.005, max = 0.005)
-h_fuscata$Thorax = h_fuscata$Thorax + runif(359, min = -.005, max = 0.005)
-h_fuscata$Abdomen = h_fuscata$Abdomen + runif(359, min = -.005, max = 0.005)
-h_fuscata$Body = h_fuscata$Body + runif(359, min = -.005, max = 0.005)
-
-m_mongol = m_mongol %>% arrange(Head.width)
-h_fuscata = h_fuscata %>%arrange(Head)
-
-m_mongol = as_tibble(m_mongol) %>% mutate(Instar = as.character(Instar)) %>% mutate(log_trans = log(Head.width))
-h_fuscata = as_tibble(h_fuscata) %>% mutate(log_head = log(Head), log_thorax = log(Thorax), log_abdomen = log(Abdomen), log_body = log(Body))
-
-
-h_fuscata = as_tibble(h_fuscata) %>% mutate(stlog_head = scale(log_head), stlog_thorax = scale(log_thorax), stlog_abdomen = scale(log_abdomen), stlog_body = scale(log_body))
-
 ```
 
-
-
-
 ```{r}
-
 #Bootstrap
 
 num_simul = 100
@@ -73,23 +48,18 @@ for(i in 1:num_simul){
 plot_list = list()
 plot_list[[1]] = curve(Mixden(x, p = p, mu = mu, sigma = sqrt(s_sq)), from = -1.5, to = 2.5, lwd = 2, ylab = "Theoretical density")
 
-
 delta = min(diff(mu))^2 / mean(s_sq)
 B = exp(-1/8*delta - 1/2 * log(mean(s_sq)/ sqrt(sum(s_sq[1:2]))))
-
-  
 ```
 
 
 ```{r}
-
 #Bootstrap
 
 num_simul = 100
 n=500
 K = 5
 simul_set1h = list()
-
 
 ##setting_1
 p =  rep(0.2, K)
@@ -113,7 +83,6 @@ delta_2 = min(diff(mu))^2 / (s_sum[K-1]/2)
 
 B_1 = exp(-1/8*delta_1 - 1/2 * log((s_sum[1]/2)/ sqrt((s_sum[1]))))
 B_2 = exp(-1/8*delta_2 - 1/2 * log((s_sum[K-1]/2)/ sqrt((s_sum[K-1]))))
-
 ```
 
 
@@ -122,8 +91,6 @@ B_2 = exp(-1/8*delta_2 - 1/2 * log((s_sum[K-1]/2)/ sqrt((s_sum[K-1]))))
 ```{r}
 #Bootstrap
 
-num_simul = 100
-n=500
 K = 5
 simul_set2 = list()
 
@@ -142,10 +109,8 @@ for(i in 1:num_simul){
 
 plot_list[[3]] = curve(Mixden(x, p = p, mu = mu, sigma = sqrt(s_sq)), from = -1.5, to = 3, lwd = 2, ylab = "Theoretical density")
 
-
 delta = min(diff(mu))^2 / mean(s_sq[1])
 B = exp(-1/8*delta - 1/2 * log(s_sq[1]/ sqrt(sum(s_sq[1:2]))))
-
 ```
 
 
@@ -153,8 +118,6 @@ B = exp(-1/8*delta - 1/2 * log(s_sq[1]/ sqrt(sum(s_sq[1:2]))))
 ```{r}
 #Bootstrap
 
-num_simul = 100
-n=500
 K = 5
 simul_set2h = list()
 
@@ -188,8 +151,7 @@ B_2 = exp(-1/8*delta_2 - 1/2 * log((s_sum[K-1]/2)/ sqrt((s_sum[K-1]))))
 
 ```{r}
 #Bootstrap
-num_simul = 100
-n=500
+
 K = 5
 simul_set3 = list()
 
@@ -211,14 +173,12 @@ plot_list[[5]] = curve(Mixden(x, p = p, mu = mu, sigma = sqrt(s_sq)), from = -1.
 
 delta = min(diff(mu))^2 / mean(s_sq[1])
 B = exp(-1/8*delta - 1/2 * log(s_sq[1]/ sqrt(sum(s_sq[1:2]))))
-
 ```
 
 
 ```{r}
 #Bootstrap
-num_simul = 100
-n=500
+
 K = 5
 simul_set3h = list()
 
@@ -249,8 +209,7 @@ B_2 = exp(-1/8*delta_2 - 1/2 * log((s_sum[K-1]/2)/ sqrt((s_sum[K-1]))))
 
 ```{r}
 #Bootstrap
-num_simul = 100
-n=500
+
 K = 5
 simul_set4 = list()
 
@@ -283,8 +242,7 @@ B_2 = exp(-1/8*delta - 1/2 * log(mean(s_sq)/ sqrt(sum(s_sq[1:2]))))
 
 ```{r}
 #Bootstrap
-num_simul = 100
-n=500
+
 K = 5
 simul_set4h = list()
 
@@ -316,8 +274,7 @@ B_2 = exp(-1/8*delta_2 - 1/2 * log((s_sum[K-1]/2)/ sqrt((s_sum[K-1]))))
 
 ```{r}
 #Bootstrap
-num_simul = 100
-n= 500
+
 K = 6
 simul_set5 = list()
 
@@ -347,8 +304,7 @@ Bmax = exp(-1/8*delta - 1/2 * log(s_sq[1]/ sqrt(sum(s_sq[1:2]))))
 
 ```{r}
 #Bootstrap
-num_simul = 100
-n= 500
+
 K = 6
 simul_set5h = list()
 
@@ -377,10 +333,24 @@ B_2 = exp(-1/8*delta_2 - 1/2 * log((s_sum[K-1]/2)/ sqrt((s_sum[K-1]))))
 ```
 
 
+```{r fig.height=5, fig.width=10}
+# Draw plots
+
+par(mfrow = c(2, 3))
+for(i in 1:6){
+  plot(plot_list[[2*i-1]], type = "l", lwd = 2, xlab = paste("ln values of Case", i), ylab = "Theoretical density", cex.lab=1.5, cex.axis = 1.3)
+}
+
+par(mfrow = c(2, 3))
+for(i in 1:6){
+  plot(plot_list[[2*i]], type = "l", lwd = 2, xlab = paste("ln values of Case", i+6), ylab = "Theoretical density", cex.lab=1.5, cex.axis = 1.3)
+}
+```
+
+
 ```{r}
 #Bootstrap
-num_simul = 100
-n= 500
+
 K = 6
 simul_set6 = list()
 
@@ -410,8 +380,7 @@ Bmax = exp(-1/8*delta - 1/2 * log(s_sq[1]/ sqrt(sum(s_sq[1:2]))))
 
 ```{r}
 #Bootstrap
-num_simul = 100
-n= 500
+
 K = 6
 simul_set6h = list()
 
@@ -436,30 +405,7 @@ delta_2 = min(diff(mu))^2 / (s_sum[K-1]/2)
 
 B_1 = exp(-1/8*delta_1 - 1/2 * log((s_sum[1]/2)/ sqrt((s_sum[1]))))
 B_2 = exp(-1/8*delta_2 - 1/2 * log((s_sum[K-1]/2)/ sqrt((s_sum[K-1]))))
-
-
-
-
 ```
-
-
-
-```{r}
-ncores = 10
-cl = makeCluster(ncores)
-registerDoParallel(cl)
-
-simul_comp = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
-  simul = simul_set1[[simu]]
-  temp = find_comp(simul, ini_method = "kmeans")
-  return(temp)
-}
-stopCluster(cl)
-
-```
-
-
-
 
 ```{r}
 ncores = 10
@@ -473,20 +419,18 @@ simul_comp1 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
 }
 stopCluster(cl)
 
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
 
+set.seed(200)
 simul_boot1 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set1[[simu]]
    temp = sapply(para_boot_LR(simul, K=5, bootnum = 99), FUN = function(x) x)
    return(temp)
 }
 stopCluster(cl)
-
 ```
-
 
 
 ```{r}
@@ -501,21 +445,18 @@ simul_comp2 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
 }
 stopCluster(cl)
 
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
 
+set.seed(200)
 simul_boot2 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set2[[simu]]
    temp = sapply(para_boot_LR(simul, K=5, bootnum = 99), FUN = function(x) x)
    return(temp)
 }
 stopCluster(cl)
-
 ```
-
-
 
 ```{r}
 ncores = 10
@@ -529,20 +470,18 @@ simul_comp3 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
 }
 stopCluster(cl)
 
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
 
+set.seed(200)
 simul_boot3 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set3[[simu]]
    temp = sapply(para_boot_LR(simul, K=5, bootnum = 99), FUN = function(x) x)
    return(temp)
 }
 stopCluster(cl)
-
 ```
-
 
 ```{r}
 ncores = 10
@@ -561,15 +500,14 @@ ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
 
+set.seed(200)
 simul_boot4 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set4[[simu]]
    temp = sapply(para_boot_LR(simul, K=5, bootnum = 99), FUN = function(x) x)
    return(temp)
 }
 stopCluster(cl)
-
 ```
-
 
 ```{r}
 ncores = 10
@@ -583,18 +521,17 @@ simul_comp5 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
 }
 stopCluster(cl)
 
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
 
+set.seed(200)
 simul_boot5 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set5[[simu]]
    temp = sapply(para_boot_LR(simul, K=6, bootnum = 99), FUN = function(x) x)
    return(temp)
 }
 stopCluster(cl)
-
 ```
 
 
@@ -611,23 +548,18 @@ simul_comp6 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
 }
 stopCluster(cl)
 
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
 
+set.seed(200)
 simul_boot6 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set6[[simu]]
    temp = sapply(para_boot_LR(simul, K=6, bootnum = 99), FUN = function(x) x)
    return(temp)
 }
 stopCluster(cl)
-
 ```
-
-
-
-
 
 ```{r}
 ncores = 10
@@ -641,23 +573,18 @@ simul_comp1h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
 }
 stopCluster(cl)
 
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
 
+set.seed(200)
 simul_boot1h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set1h[[simu]]
    temp = sapply(para_boot_LR(simul, K=5, bootnum = 99), FUN = function(x) x)
    return(temp)
 }
 stopCluster(cl)
-
 ```
-
-
-
-
 
 ```{r}
 ncores = 10
@@ -671,21 +598,18 @@ simul_comp2h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
 }
 stopCluster(cl)
 
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
 
+set.seed(200)
 simul_boot2h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set2h[[simu]]
    temp = sapply(para_boot_LR(simul, K=5, bootnum = 99), FUN = function(x) x)
    return(temp)
 }
 stopCluster(cl)
-
 ```
-
-
 
 ```{r}
 ncores = 10
@@ -699,20 +623,18 @@ simul_comp3h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
 }
 stopCluster(cl)
 
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
 
+set.seed(200)
 simul_boot3h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set3h[[simu]]
    temp = sapply(para_boot_LR(simul, K=5, bootnum = 99), FUN = function(x) x)
    return(temp)
 }
 stopCluster(cl)
-
 ```
-
 
 ```{r}
 ncores = 10
@@ -726,21 +648,18 @@ simul_comp4h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
 }
 stopCluster(cl)
 
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
 
+set.seed(200)
 simul_boot4h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set4h[[simu]]
    temp = sapply(para_boot_LR(simul, K=5, bootnum = 99), FUN = function(x) x)
    return(temp)
 }
 stopCluster(cl)
-
 ```
-
-
 
 ```{r}
 ncores = 10
@@ -754,20 +673,18 @@ simul_comp5h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
 }
 stopCluster(cl)
 
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
 
+set.seed(200)
 simul_boot5h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set5h[[simu]]
    temp = sapply(para_boot_LR(simul, K=6, bootnum = 99), FUN = function(x) x)
    return(temp)
 }
 stopCluster(cl)
-
 ```
-
 
 ```{r}
 ncores = 10
@@ -781,11 +698,11 @@ simul_comp6h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
 }
 stopCluster(cl)
 
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
 
+set.seed(200)
 simul_boot6h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set6h[[simu]]
    temp = sapply(para_boot_LR(simul, K=6, bootnum = 99), FUN = function(x) x)
@@ -794,69 +711,7 @@ simul_boot6h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
 stopCluster(cl)
 ```
 
-
-
-
-
 ```{r}
-
-sim_boot_foreach <- function(simul_setn, num_simul, ncores = 10){
-  
-  cl = makeCluster(ncores)
-  registerDoParallel(cl)
-  
-  simul_result = foreach(simu=1:num_simul, .export = ls(envir=globalenv()), .combine = rbind) %dopar% {
-    simul = simul_setn[[simu]]
-    temp = sapply(para_boot_LR(simul, K, bootnum = bootnum), FUN = function(x) x)
-    return(temp)
-  }
-  stopCluster(cl)
-  return(simul_result)
-  
-}
-
-
-sim_comp_foreach <- function(simul_setn, num_simul, ncores = 10){
-  
-  cl = makeCluster(ncores)
-  registerDoParallel(cl)
-  
-  simul_comp = foreach(simu=1:num_simul, .export = ls(envir=globalenv()), .combine = rbind) %dopar% {
-    simul = simul_setn[[simu]]
-    temp = find_comp(simul, ini_method = "kmeans")
-    return(temp)
-  }
-  stopCluster(cl)
-  return(simul_comp)
-}
-
-k=5
-bootnum = 99
-simul_result2 = sim_boot_foreach(simul_set = simul_set2[[1]], num_simul = num_simul)
-```
-
-
-```{r fig.height=5, fig.width=10}
-
-par(mfrow = c(2, 3))
-
-for(i in 1:6){
-  plot(plot_list[[2*i-1]], type = "l", lwd = 2, xlab = paste("ln values of Case", i), ylab = "Theoretical density", cex.lab=1.5, cex.axis = 1.3)
-}
-?plot()
-
-par(mfrow = c(2, 3))
-
-for(i in 1:6){
-  plot(plot_list[[2*i]], type = "l", lwd = 2, xlab = paste("ln values of Case", i+6), ylab = "Theoretical density", cex.lab=1.5, cex.axis = 1.3)
-}
-
-
-
-```
-
-```{r}
-
 var_list = paste0("simul_boot",c(1:6, paste0(1:6,"h")))
 var_list2 = paste0("simul_comp",c(1:6, paste0(1:6,"h")))
 var_list
@@ -869,8 +724,6 @@ dfcomp = NULL
 dfa0.05_1 = dfa0.05
 dfa0.1_1 = dfa0.1
 
-
-
 #for(i in 1:12){
 #dfa0.05[nrow(dfa0.05)+1,] = hypo_test(eval(parse(text = var_list[i])), alpha = 0.05, first = "h3")
 #dfa0.1[nrow(dfa0.1)+1,] = hypo_test(eval(parse(text = var_list[i])), alpha = 0.1, first = "h3")
@@ -882,9 +735,6 @@ dfa0.1_1 = dfa0.1
 #dfICLh[nrow(dfICLh)+1, ] = temp$min_hypo
 #dfcomp = rbind(dfcomp, temp$selection)
 #}
-
-
-
 
 odd.05 = NULL
 odd.10 = NULL
@@ -911,156 +761,14 @@ for(i in 1:12){
 }
 
 
-
 write.xlsx(cbind(dfa0.05, dfa0.1), file = "simul.xlsx", sheetName = "hypo", append = FALSE)
-
-
 write.xlsx(dfICLh, file = "simul.xlsx", sheetName = "ICL", append = TRUE)
 write.xlsx(dfcomp, file = "simul.xlsx", sheetName = "comp", append = TRUE)
 
 
-
-
-
 library(xlsx)
-
 write.xlsx(cbind(dfa0.05_1, dfa0.1_1), file = "simul_1.xlsx", sheetName = "hypo", append = FALSE)
-
 write.xlsx(dfICLh, file = "simul_1.xlsx", sheetName = "ICL", append = TRUE)
 write.xlsx(dfcomp, file = "simul_1.xlsx", sheetName = "comp", append = TRUE)
 ```
-
-
-
-```{r}
-
-x = m_mongol$log_trans
-
-set.seed(300)
-real_comp = find_comp(x, ini_method = "kmeans", tol = 1e-8)
-real_boot = sapply(para_boot_LR(x, K=5, bootnum = 9, max_it = 1e3, tol = 1e-8, max_it.boot = 5e2, tol.boot = 1e-6, conv.deal = T), FUN = function(x) x)
-
-
-
-col_n = names(real_boot)
-
-
-dd =as.data.frame(matrix(real_boot, ncol=10, byrow = F))
-colnames(dd) = col_n
-
-dd$h4h1
-
-
-real_boot
-hypo_test(real_boot, alpha = 0.05, adj.method = "bonferroni")
-
-```
-
-
-
-
-```{r fig.height=4, fig.width=10}
-K_min = 3
-K_max = 8
-x = m_mongol$log_trans
-BIC = matrix(0, nrow = K_max-3+1, ncol = 4)
-
-rownames(BIC) = K_min:K_max
-colnames(BIC) = paste0("h", 1:4)
-
-ICL = BIC
-LR = BIC
-result = list()
-#delete = c(209, 210)
-delete = 999
-for(k in K_min:K_max){
-  result[[k-2]] = ECM(x, K=k, ini_method = "kmeans", delete = delete, tol = 1e-8)
-}
-
-
-for(k in K_min:K_max){
-  BIC[k-2, ] = result[[k-2]]$criteria[,1]
-  ICL[k-2, ] = result[[k-2]]$criteria[,2]
-  LR[k-2, ] = result[[k-2]]$criteria[,3]
-  par(mfrow = c(2,2))
-  plot(-(result[[k-2]]$log_likelihood$h1 %>% na.omit()), ylab = "negative log-likelihood", main = "h1")
-   plot(-(result[[k-2]]$log_likelihood$h2 %>% na.omit()),  ylab = "negative log-likelihood", main = "h2")
-    plot(-(result[[k-2]]$log_likelihood$h3 %>% na.omit()),  ylab = "negative log-likelihood", main = "h3")
-     plot(-(result[[k-2]]$log_likelihood$h4 %>% na.omit()),  ylab = "negative log-likelihood", main = "h4")
-}
-
-c(bquote(ialic(M["1G"])),bquote(M["2G"]),bquote(M["3G"]))
-
-
-
-leg_label = c()
-for(i in 1:4){
-  leg_label = c(leg_label, bquote(italic(M)[.(paste0(i,"G"))]))
-}
-leg_label
-
-
-par(mfrow = c(1,2))
-matplot(K_min:K_max, BIC, type = "b", col=c(2,2,4,4), lty=c(1,2,1,2), xlab = "Number of instars", main = "", lwd = 2, cex.lab=1.3)
-legend("topright", legend =  leg_label, col=c(2,2,4,4), lty=c(1,2,1,2), lwd = 2)
-matplot(K_min:K_max, ICL, type = "b", col=c(2,2,4,4), lty=c(1,2,1,2), xlab = "Number of instars", main = "", lwd = 2, cex.lab=1.3)
-legend("topright", legend = leg_label, col=c(2,2,4,4),  lty=c(1,2,1,2), lwd = 2)
-
-
-apply(BIC, 2, which.min)+2
-apply(ICL, 2, which.min)+2
-
-estimate = result[[5-2]]$est
-
-par(mfrow = c(1,1))
-hist(x, breaks = 100, prob=T, main = "", xlab = "ln head capsule width", cex.lab=1.3)
-legend("topleft", legend = leg_label, col=c(2,2,4,4), lty=c(1,2,1,2), lwd = 2, cex = 1.3)
-for(i in 1:4){
-  curve(Mixden(x, p = estimate$p[,i],mu = estimate$mu[,i], sigma = sqrt(estimate$sigma_sq[,i])), from = min(x)-0.3, to = max(x)+0.3, add = T, col=((i %/%3+1)*2), lty = (i %% 2+1), lwd = 2)
-}
-
-table(m_mongol$Instar[-delete] %>% as.numeric(), result[[5-2]]$classified$h1)
-table(m_mongol$Instar[-delete] %>% as.numeric(), result[[5-2]]$classified$h2)
-table(m_mongol$Instar[-delete] %>% as.numeric(), result[[5-2]]$classified$h3)
-table(m_mongol$Instar[-delete] %>% as.numeric(), result[[5-2]]$classified$h4)
-
-
-ICL
-BIC
-round(-2*(LR[3,] - 91.55739),1)
-
-```
-
-```{r}
-## Descrptive analysis
-
-
-install.packages("summarytools")
-library(summarytools)
-
-
-descr(m_mongol$Head.width,
-      headings = FALSE, # remove headings
-      stats = "common" # most common descriptive statistics
-)
-
-
-stby(data = m_mongol,
-      INDICES = m_mongol$Instar,
-      FUN = descr,
-      stats = "common" # most common descriptive statistics
-)
-
-
-install.packages("psych")
-library(psych)
-describeBy(
-  m_mongol,
-  m_mongol$Instar # grouping variable
-)
-
-```
-
-
-
 
