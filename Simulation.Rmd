@@ -17,7 +17,7 @@ When you click the **Knit** button a document will be generated that includes bo
 
 ```{r}
 rm(list = ls())
-source("functions3.R")
+source("functions.R")
 ```
 
 ```{r}
