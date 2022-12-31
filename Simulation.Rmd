@@ -710,9 +710,10 @@ stopCluster(cl)
 ```
 
 ```{r}
-var_list = paste0("simul_boot",c(1:6, paste0(1:6,"h")))
-var_list2 = paste0("simul_comp",c(1:6, paste0(1:6,"h")))
-var_list
+# record the result of parametric bootstrap LR tests
+
+result_list_boot = paste0("simul_boot",c(1:6, paste0(1:6,"h")))
+result_list_comp = paste0("simul_comp",c(1:6, paste0(1:6,"h")))
 
 dfa0.05 = data.frame("h1" = numeric(0), "h2" = numeric(0), "h3" = numeric(0), "h4" = numeric(0))
 dfa0.1 = data.frame("h1" = numeric(0), "h2" = numeric(0), "h3" = numeric(0), "h4" = numeric(0))
@@ -728,19 +729,19 @@ odd.05_1 = NULL
 odd.10_1 = NULL
 
 for(i in 1:12){
-  temp = hypo_test(eval(parse(text = var_list[i])), alpha = 0.05, adj.method = "bonferroni")
+  temp = hypo_test(eval(parse(text = result_list_boot[i])), alpha = 0.05, adj.method = "bonferroni")
   dfa0.05[nrow(dfa0.05)+1,] = temp$hypo
 
-  temp = hypo_test(eval(parse(text = var_list[i])), alpha = 0.1, adj.method = "bonferroni")
+  temp = hypo_test(eval(parse(text = result_list_boot[i])), alpha = 0.1, adj.method = "bonferroni")
   dfa0.1[nrow(dfa0.1)+1,] = temp$hypo
  
   
-  temp = hypo_test(eval(parse(text = var_list[i])), alpha = 0.05, adj.method = "punzo")
+  temp = hypo_test(eval(parse(text = result_list_boot[i])), alpha = 0.05, adj.method = "punzo")
   dfa0.05_1[nrow(dfa0.05_1)+1,] = temp$hypo
-  temp = hypo_test(eval(parse(text = var_list[i])), alpha = 0.1, adj.method = "punzo")
+  temp = hypo_test(eval(parse(text = result_list_boot[i])), alpha = 0.1, adj.method = "punzo")
   dfa0.1_1[nrow(dfa0.1_1)+1,] = temp$hypo
   
-  temp = minimize_ICL(eval(parse(text = var_list2[i])))
+  temp = minimize_ICL(eval(parse(text = result_list_comp[i])))
   dfICLh[nrow(dfICLh)+1, ] = temp$min_hypo
   dfcomp = rbind(dfcomp, temp$selection)
 }
