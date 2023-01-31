@@ -410,9 +410,9 @@ para_boot_LR <- function(x, K, bootnum, delete= NULL, max_it = 5e3, max_it.boot 
   nanh4h1 = sum(is.nan(LRbooth4h1))
   nanh2h1 = sum(is.nan(LRbooth2h1))
   
-  return(list(h3h1 = sum(LRbooth3h1 > LRh3h1, na.rm = T)/(bootnum+1-nanh3h1), h4h3 = sum(LRbooth4h3 > LRh4h3, na.rm = T)/(bootnum+1-nanh4h3),
-              h4h2 = sum(LRbooth4h2 > LRh4h2, na.rm = T)/(bootnum+1-nanh4h2), h4h1 = sum(LRbooth4h1 > LRh4h1, na.rm = T)/(bootnum+1-nanh4h1), h2h1 = sum(LRbooth2h1 > LRh2h1, na.rm = T)/(bootnum+1-nanh2h1),
-              nanh3h1 = nanh3h1, nanh4h3 = nanh4h3, nanh4h2 = nanh4h2, nanh4h1 = nanh4h1, nanh2h1 = nanh2h1))
+  return(data.frame(h3h1 = sum(LRbooth3h1 > LRh3h1, na.rm = T)/(bootnum+1-nanh3h1), h4h3 = sum(LRbooth4h3 > LRh4h3, na.rm = T)/(bootnum+1-nanh4h3),
+                      h4h2 = sum(LRbooth4h2 > LRh4h2, na.rm = T)/(bootnum+1-nanh4h2), h4h1 = sum(LRbooth4h1 > LRh4h1, na.rm = T)/(bootnum+1-nanh4h1), h2h1 = sum(LRbooth2h1 > LRh2h1, na.rm = T)/(bootnum+1-nanh2h1),
+                      nanh3h1 = nanh3h1, nanh4h3 = nanh4h3, nanh4h2 = nanh4h2, nanh4h1 = nanh4h1, nanh2h1 = nanh2h1))
 }
 
 
@@ -440,9 +440,7 @@ find_comp <- function(x, K = 3:8, ini_method = "kmeans", max_it = 1e3, tol = 1e-
 
 
 hypo_test <- function(tab, alpha = 0.05, adj.method = c("bonferroni", "punzo")){
-  tab_col = names(tab)
-  tab = as.data.frame(matrix(tab, ncol=10, byrow = F))
-  colnames(tab) = tab_col
+  
   ##Bonferroni correction
   
   if(adj.method == "bonferroni"){
@@ -514,5 +512,8 @@ minimize_ICL <- function(tab, Kmin=3, Kmax=8){
   result$min_hypo = min_hypo
   return(result)
 }
+
+
+
 
 
