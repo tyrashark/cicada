@@ -1,7 +1,7 @@
 ---
 title: "Cicada project simulation"
 author: "Sungmin Ji"
-date: '2022-12-21'
+date: '2023-01-31'
 output: html_document
 ---
 
@@ -18,67 +18,54 @@ When you click the **Knit** button a document will be generated that includes bo
 ```{r}
 rm(list = ls())
 source("functions.R")
+
 ```
 
 ```{r}
 #Bootstrap
-
 num_simul = 100
 n=500
 K = 5
 simul_set1 = list()
-
-
 ##setting_1
 p =  rep(0.2, K)
 mu =  seq(-1, 2, length = K)
 s_sq = rep(0.01, K)
-
 set.seed(100)
 for(i in 1:num_simul){
   z_null = rmultinom(n, 1, prob=p)
   x_null = mapply(FUN = function(mu, sigma) rnorm(n, mean = mu, sd = sqrt(sigma)), mu, s_sq)
-
   simul_set1[[i]] =  apply(x_null * t(z_null), 1, sum)
 }
-
-
 plot_list = list()
 plot_list[[1]] = curve(Mixden(x, p = p, mu = mu, sigma = sqrt(s_sq)), from = -1.5, to = 2.5, lwd = 2, ylab = "Theoretical density")
-
 delta = min(diff(mu))^2 / mean(s_sq)
 B = exp(-1/8*delta - 1/2 * log(mean(s_sq)/ sqrt(sum(s_sq[1:2]))))
+
+B = exp(-1/8*delta)
 ```
 
 
 ```{r}
 #Bootstrap
-
 num_simul = 100
 n=500
 K = 5
 simul_set1h = list()
-
 ##setting_1
 p =  rep(0.2, K)
 mu =  seq(-1, 2, length = K)
 s_sq = seq(from = 0.006, to = 0.01, length=K)
-
 set.seed(100)
 for(i in 1:num_simul){
   z_null = rmultinom(n, 1, prob=p)
   x_null = mapply(FUN = function(mu, sigma) rnorm(n, mean = mu, sd = sqrt(sigma)), mu, s_sq)
-
   simul_set1h[[i]] =  apply(x_null * t(z_null), 1, sum)
 }
-
 plot_list[[2]] = curve(Mixden(x, p = p, mu = mu, sigma = sqrt(s_sq)), from = -1.5, to = 2.5, lwd = 2, ylab = "Theoretical density")
-
-
 s_sum = s_sq[-1] + s_sq[-K]
 delta_1 = max(diff(mu))^2 / (s_sum[1]/2)
 delta_2 = min(diff(mu))^2 / (s_sum[K-1]/2)
-
 B_1 = exp(-1/8*delta_1 - 1/2 * log((s_sum[1]/2)/ sqrt((s_sum[1]))))
 B_2 = exp(-1/8*delta_2 - 1/2 * log((s_sum[K-1]/2)/ sqrt((s_sum[K-1]))))
 ```
@@ -88,25 +75,19 @@ B_2 = exp(-1/8*delta_2 - 1/2 * log((s_sum[K-1]/2)/ sqrt((s_sum[K-1]))))
 
 ```{r}
 #Bootstrap
-
 K = 5
 simul_set2 = list()
-
 ##setting_2
 p =  rep(0.2, K)
 mu = c(-1, -0.1, 0.8, 1.55, 2.3)
 s_sq = rep(0.01, K)
-
 set.seed(100)
 for(i in 1:num_simul){
   z_null = rmultinom(n, 1, prob=p)
   x_null = mapply(FUN = function(mu, sigma) rnorm(n, mean = mu, sd = sqrt(sigma)), mu, s_sq)
-
   simul_set2[[i]] =  apply(x_null * t(z_null), 1, sum)
 }
-
 plot_list[[3]] = curve(Mixden(x, p = p, mu = mu, sigma = sqrt(s_sq)), from = -1.5, to = 3, lwd = 2, ylab = "Theoretical density")
-
 delta = min(diff(mu))^2 / mean(s_sq[1])
 B = exp(-1/8*delta - 1/2 * log(s_sq[1]/ sqrt(sum(s_sq[1:2]))))
 ```
@@ -115,186 +96,142 @@ B = exp(-1/8*delta - 1/2 * log(s_sq[1]/ sqrt(sum(s_sq[1:2]))))
 
 ```{r}
 #Bootstrap
-
 K = 5
 simul_set2h = list()
-
 ##setting_2
 p =  rep(0.2, K)
 mu = c(-1, -0.1, 0.8, 1.55, 2.3)
 s_sq = seq(from = 0.006, to = 0.01, length=K)
-
 set.seed(100)
 for(i in 1:num_simul){
   z_null = rmultinom(n, 1, prob=p)
   x_null = mapply(FUN = function(mu, sigma) rnorm(n, mean = mu, sd = sqrt(sigma)), mu, s_sq)
-
   simul_set2h[[i]] =  apply(x_null * t(z_null), 1, sum)
 }
-
 plot_list[[4]] = curve(Mixden(x, p = p, mu = mu, sigma = sqrt(s_sq)), from = -1.5, to = 3, lwd = 2, ylab = "Theoretical density")
-
-
 s_sum = s_sq[-1] + s_sq[-K]
 delta_1 = max(diff(mu))^2 / (s_sum[1]/2)
 delta_2 = min(diff(mu))^2 / (s_sum[K-1]/2)
-
 B_1 = exp(-1/8*delta_1 - 1/2 * log((s_sum[1]/2)/ sqrt((s_sum[1]))))
 B_2 = exp(-1/8*delta_2 - 1/2 * log((s_sum[K-1]/2)/ sqrt((s_sum[K-1]))))
-
-
 ```
 
 
 
 ```{r}
 #Bootstrap
-
 K = 5
 simul_set3 = list()
-
 ##setting_3
 p =  rep(0.2, K)
 mu =  seq(-1, 2, length = K)
 s_sq = rep(0.02875, K)
-
 set.seed(100)
 for(i in 1:num_simul){
   z_null = rmultinom(n, 1, prob=p)
   x_null = mapply(FUN = function(mu, sigma) rnorm(n, mean = mu, sd = sqrt(sigma)), mu, s_sq)
-
   simul_set3[[i]] =  apply(x_null * t(z_null), 1, sum)
 }
-
 plot_list[[5]] = curve(Mixden(x, p = p, mu = mu, sigma = sqrt(s_sq)), from = -1.5, to = 2.5, lwd = 2, ylab = "Theoretical density")
-
-
 delta = min(diff(mu))^2 / mean(s_sq[1])
 B = exp(-1/8*delta - 1/2 * log(s_sq[1]/ sqrt(sum(s_sq[1:2]))))
+
+
+
+
+B = exp(-1/8*delta)
 ```
 
 
 ```{r}
 #Bootstrap
-
 K = 5
 simul_set3h = list()
-
 ##setting_3
 p =  rep(0.2, K)
 mu =  seq(-1, 2, length = K)
 s_sq  = seq(from = 0.0150, to = 0.0305, length=K)
-
 set.seed(100)
 for(i in 1:num_simul){
   z_null = rmultinom(n, 1, prob=p)
   x_null = mapply(FUN = function(mu, sigma) rnorm(n, mean = mu, sd = sqrt(sigma)), mu, s_sq)
-
   simul_set3h[[i]] =  apply(x_null * t(z_null), 1, sum)
 }
-
 plot_list[[6]] = curve(Mixden(x, p = p, mu = mu, sigma = sqrt(s_sq)), from = -1.5, to = 2.5, lwd = 2, ylab = "Theoretical density")
-
-
 s_sum = s_sq[-1] + s_sq[-K]
 delta_1 = max(diff(mu))^2 / (s_sum[1]/2)
 delta_2 = min(diff(mu))^2 / (s_sum[K-1]/2)
-
 B_1 = exp(-1/8*delta_1 - 1/2 * log((s_sum[1]/2)/ sqrt((s_sum[1]))))
 B_2 = exp(-1/8*delta_2 - 1/2 * log((s_sum[K-1]/2)/ sqrt((s_sum[K-1]))))
+
+
+
+
 
 ```
 
 ```{r}
 #Bootstrap
-
 K = 5
 simul_set4 = list()
-
 ##setting_4
 p =  rep(0.2, K)
 mu = c(-1, -0.1, 0.8, 1.55, 2.3)
 s_sq = rep(0.02875, K)
-
 set.seed(100)
 for(i in 1:num_simul){
   z_null = rmultinom(n, 1, prob=p)
   x_null = mapply(FUN = function(mu, sigma) rnorm(n, mean = mu, sd = sqrt(sigma)), mu, s_sq)
-
   simul_set4[[i]] =  apply(x_null * t(z_null), 1, sum)
 }
-
 plot_list[[7]] = curve(Mixden(x, p = p, mu = mu, sigma = sqrt(s_sq)), from = -1.5, to = 3, lwd = 2, ylab = "Theoretical density")
-
-
-
-
 delta = max(diff(mu))^2 / mean(s_sq)
 B_1 = exp(-1/8*delta - 1/2 * log(mean(s_sq)/ sqrt(sum(s_sq[1:2]))))
-
 delta = min(diff(mu))^2 / mean(s_sq)
 B_2 = exp(-1/8*delta - 1/2 * log(mean(s_sq)/ sqrt(sum(s_sq[1:2]))))
-
 ```
 
 
 ```{r}
 #Bootstrap
-
 K = 5
 simul_set4h = list()
-
 ##setting_4
 p =  rep(0.2, K)
 mu = c(-1, -0.1, 0.8, 1.55, 2.3)
 s_sq  = seq(from = 0.0150, to = 0.0305, length=K)
-
 set.seed(100)
 for(i in 1:num_simul){
   z_null = rmultinom(n, 1, prob=p)
   x_null = mapply(FUN = function(mu, sigma) rnorm(n, mean = mu, sd = sqrt(sigma)), mu, s_sq)
-
   simul_set4h[[i]] =  apply(x_null * t(z_null), 1, sum)
 }
-
 plot_list[[8]] = curve(Mixden(x, p = p, mu = mu, sigma = sqrt(s_sq)), from = -1.5, to = 3, lwd = 2, ylab = "Theoretical density")
-
-
 s_sum = s_sq[-1] + s_sq[-K]
 delta_1 = max(diff(mu))^2 / (s_sum[1]/2)
 delta_2 = min(diff(mu))^2 / (s_sum[K-1]/2)
-
 B_1 = exp(-1/8*delta_1 - 1/2 * log((s_sum[1]/2)/ sqrt((s_sum[1]))))
 B_2 = exp(-1/8*delta_2 - 1/2 * log((s_sum[K-1]/2)/ sqrt((s_sum[K-1]))))
-
 ```
 
 
 ```{r}
 #Bootstrap
-
 K = 6
 simul_set5 = list()
-
-
 ##setting_5
 p =  c(0.133, 0.227, 0.217, 0.2, 0.131, 0.092)
 mu =  seq(-1, 2.75, length = K)
 s_sq = rep(0.01, K)
-
 set.seed(100)
 for(i in 1:num_simul){
   z_null = rmultinom(n, 1, prob=p)
   x_null = mapply(FUN = function(mu, sigma) rnorm(n, mean = mu, sd = sqrt(sigma)), mu, s_sq)
-
   simul_set5[[i]] =  apply(x_null * t(z_null), 1, sum)
 }
-
 plot_list[[9]] = curve(Mixden(x, p = p, mu = mu, sigma = sqrt(s_sq)), from = -1.5, to = 3.5, lwd = 2, ylab = "Theoretical density")
-
 delta = min(diff(mu))^2 / mean(s_sq[1])
 Bmin = exp(-1/8*delta - 1/2 * log(s_sq[1]/ sqrt(sum(s_sq[1:2]))))
-
 delta = max(diff(mu))^2 / mean(s_sq[1])
 Bmax = exp(-1/8*delta - 1/2 * log(s_sq[1]/ sqrt(sum(s_sq[1:2]))))
 ```
@@ -302,129 +239,100 @@ Bmax = exp(-1/8*delta - 1/2 * log(s_sq[1]/ sqrt(sum(s_sq[1:2]))))
 
 ```{r}
 #Bootstrap
-
 K = 6
 simul_set5h = list()
-
-
 ##setting_5
 p =  c(0.133, 0.227, 0.217, 0.2, 0.131, 0.092)
 mu =  seq(-1, 2.75, length = K)
 s_sq = seq(from = 0.006, to = 0.011, length=K)
-
 set.seed(100)
 for(i in 1:num_simul){
   z_null = rmultinom(n, 1, prob=p)
   x_null = mapply(FUN = function(mu, sigma) rnorm(n, mean = mu, sd = sqrt(sigma)), mu, s_sq)
-
   simul_set5h[[i]] =  apply(x_null * t(z_null), 1, sum)
 }
-
 plot_list[[10]] = curve(Mixden(x, p = p, mu = mu, sigma = sqrt(s_sq)), from = -1.5, to = 3.5, lwd = 2, ylab = "Theoretical density")
-
 s_sum = s_sq[-1] + s_sq[-K]
 delta_1 = max(diff(mu))^2 / (s_sum[1]/2)
 delta_2 = min(diff(mu))^2 / (s_sum[K-1]/2)
-
 B_1 = exp(-1/8*delta_1 - 1/2 * log((s_sum[1]/2)/ sqrt((s_sum[1]))))
 B_2 = exp(-1/8*delta_2 - 1/2 * log((s_sum[K-1]/2)/ sqrt((s_sum[K-1]))))
 ```
 
 
+```{r}
+#Bootstrap
+K = 6
+simul_set6 = list()
+##setting_6
+p =  c(0.133, 0.227, 0.217, 0.2, 0.131, 0.092)
+mu =  seq(-1, 2.75, length = K)
+s_sq = rep(0.02875, K)
+set.seed(100)
+for(i in 1:num_simul){
+  z_null = rmultinom(n, 1, prob=p)
+  x_null = mapply(FUN = function(mu, sigma) rnorm(n, mean = mu, sd = sqrt(sigma)), mu, s_sq)
+  simul_set6[[i]] =  apply(x_null * t(z_null), 1, sum)
+}
+plot_list[[11]] =  curve(Mixden(x, p = p, mu = mu, sigma = sqrt(s_sq)), from = -1.5, to = 3.5, lwd = 2, ylab = "Theoretical density")
+delta = min(diff(mu))^2 / mean(s_sq[1])
+Bmin = exp(-1/8*delta - 1/2 * log(s_sq[1]/ sqrt(sum(s_sq[1:2]))))
+delta = max(diff(mu))^2 / mean(s_sq[1])
+Bmax = exp(-1/8*delta - 1/2 * log(s_sq[1]/ sqrt(sum(s_sq[1:2]))))
+```
+
+
+```{r}
+#Bootstrap
+K = 6
+simul_set6h = list()
+##setting_6
+p =  c(0.133, 0.227, 0.217, 0.2, 0.131, 0.092)
+mu =  seq(-1, 2.75, length = K)
+s_sq  = seq(from = 0.0150, to = 0.0300, length=K)
+set.seed(100)
+for(i in 1:num_simul){
+  z_null = rmultinom(n, 1, prob=p)
+  x_null = mapply(FUN = function(mu, sigma) rnorm(n, mean = mu, sd = sqrt(sigma)), mu, s_sq)
+  simul_set6h[[i]] =  apply(x_null * t(z_null), 1, sum)
+}
+plot_list[[12]] = curve(Mixden(x, p = p, mu = mu, sigma = sqrt(s_sq)), from = -1.5, to = 3.5, lwd = 2, ylab = "Theoretical density")
+s_sum = s_sq[-1] + s_sq[-K]
+delta_1 = max(diff(mu))^2 / (s_sum[1]/2)
+delta_2 = min(diff(mu))^2 / (s_sum[K-1]/2)
+B_1 = exp(-1/8*delta_1 - 1/2 * log((s_sum[1]/2)/ sqrt((s_sum[1]))))
+B_2 = exp(-1/8*delta_2 - 1/2 * log((s_sum[K-1]/2)/ sqrt((s_sum[K-1]))))
+```
+
 ```{r fig.height=5, fig.width=10}
 # Draw plots
-
 par(mfrow = c(2, 3))
 for(i in 1:6){
   plot(plot_list[[2*i-1]], type = "l", lwd = 2, xlab = paste("ln values of Case", i), ylab = "Theoretical density", cex.lab=1.5, cex.axis = 1.3)
 }
-
 par(mfrow = c(2, 3))
 for(i in 1:6){
   plot(plot_list[[2*i]], type = "l", lwd = 2, xlab = paste("ln values of Case", i+6), ylab = "Theoretical density", cex.lab=1.5, cex.axis = 1.3)
 }
 ```
 
-
-```{r}
-#Bootstrap
-
-K = 6
-simul_set6 = list()
-
-##setting_6
-p =  c(0.133, 0.227, 0.217, 0.2, 0.131, 0.092)
-mu =  seq(-1, 2.75, length = K)
-s_sq = rep(0.02875, K)
-
-set.seed(100)
-for(i in 1:num_simul){
-  z_null = rmultinom(n, 1, prob=p)
-  x_null = mapply(FUN = function(mu, sigma) rnorm(n, mean = mu, sd = sqrt(sigma)), mu, s_sq)
-
-  simul_set6[[i]] =  apply(x_null * t(z_null), 1, sum)
-}
-
-plot_list[[11]] =  curve(Mixden(x, p = p, mu = mu, sigma = sqrt(s_sq)), from = -1.5, to = 3.5, lwd = 2, ylab = "Theoretical density")
-
-delta = min(diff(mu))^2 / mean(s_sq[1])
-Bmin = exp(-1/8*delta - 1/2 * log(s_sq[1]/ sqrt(sum(s_sq[1:2]))))
-
-delta = max(diff(mu))^2 / mean(s_sq[1])
-Bmax = exp(-1/8*delta - 1/2 * log(s_sq[1]/ sqrt(sum(s_sq[1:2]))))
-
-```
-
-
-```{r}
-#Bootstrap
-
-K = 6
-simul_set6h = list()
-
-##setting_6
-p =  c(0.133, 0.227, 0.217, 0.2, 0.131, 0.092)
-mu =  seq(-1, 2.75, length = K)
-s_sq  = seq(from = 0.0150, to = 0.0300, length=K)
-
-set.seed(100)
-for(i in 1:num_simul){
-  z_null = rmultinom(n, 1, prob=p)
-  x_null = mapply(FUN = function(mu, sigma) rnorm(n, mean = mu, sd = sqrt(sigma)), mu, s_sq)
-
-  simul_set6h[[i]] =  apply(x_null * t(z_null), 1, sum)
-}
-
-plot_list[[12]] = curve(Mixden(x, p = p, mu = mu, sigma = sqrt(s_sq)), from = -1.5, to = 3.5, lwd = 2, ylab = "Theoretical density")
-
-s_sum = s_sq[-1] + s_sq[-K]
-delta_1 = max(diff(mu))^2 / (s_sum[1]/2)
-delta_2 = min(diff(mu))^2 / (s_sum[K-1]/2)
-
-B_1 = exp(-1/8*delta_1 - 1/2 * log((s_sum[1]/2)/ sqrt((s_sum[1]))))
-B_2 = exp(-1/8*delta_2 - 1/2 * log((s_sum[K-1]/2)/ sqrt((s_sum[K-1]))))
-```
-
 ```{r}
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 simul_comp1 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
   simul = simul_set1[[simu]]
   temp = find_comp(simul, ini_method = "kmeans")
   return(temp)
 }
 stopCluster(cl)
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 set.seed(200)
 simul_boot1 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set1[[simu]]
-   temp = sapply(para_boot_LR(simul, K=5, bootnum = 99), FUN = function(x) x)
+   temp = para_boot_LR(simul, K=5, bootnum = 99)
    return(temp)
 }
 stopCluster(cl)
@@ -435,22 +343,19 @@ stopCluster(cl)
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 simul_comp2 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
   simul = simul_set2[[simu]]
   temp = find_comp(simul, ini_method = "kmeans")
   return(temp)
 }
 stopCluster(cl)
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 set.seed(200)
 simul_boot2 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set2[[simu]]
-   temp = sapply(para_boot_LR(simul, K=5, bootnum = 99), FUN = function(x) x)
+   temp = para_boot_LR(simul, K=5, bootnum = 99)
    return(temp)
 }
 stopCluster(cl)
@@ -460,22 +365,19 @@ stopCluster(cl)
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 simul_comp3 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
   simul = simul_set3[[simu]]
   temp = find_comp(simul, ini_method = "kmeans")
   return(temp)
 }
 stopCluster(cl)
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 set.seed(200)
 simul_boot3 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set3[[simu]]
-   temp = sapply(para_boot_LR(simul, K=5, bootnum = 99), FUN = function(x) x)
+   temp = para_boot_LR(simul, K=5, bootnum = 99)
    return(temp)
 }
 stopCluster(cl)
@@ -485,23 +387,19 @@ stopCluster(cl)
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 simul_comp4 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
   simul = simul_set4[[simu]]
   temp = find_comp(simul, ini_method = "kmeans")
   return(temp)
 }
 stopCluster(cl)
-
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 set.seed(200)
 simul_boot4 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set4[[simu]]
-   temp = sapply(para_boot_LR(simul, K=5, bootnum = 99), FUN = function(x) x)
+   temp = para_boot_LR(simul, K=5, bootnum = 99)
    return(temp)
 }
 stopCluster(cl)
@@ -511,22 +409,19 @@ stopCluster(cl)
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 simul_comp5 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
   simul = simul_set5[[simu]]
   temp = find_comp(simul, ini_method = "kmeans")
   return(temp)
 }
 stopCluster(cl)
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 set.seed(200)
 simul_boot5 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set5[[simu]]
-   temp = sapply(para_boot_LR(simul, K=6, bootnum = 99), FUN = function(x) x)
+   temp = para_boot_LR(simul, K=6, bootnum = 99)
    return(temp)
 }
 stopCluster(cl)
@@ -538,22 +433,19 @@ stopCluster(cl)
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 simul_comp6 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
   simul = simul_set6[[simu]]
   temp = find_comp(simul, ini_method = "kmeans")
   return(temp)
 }
 stopCluster(cl)
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 set.seed(200)
 simul_boot6 = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set6[[simu]]
-   temp = sapply(para_boot_LR(simul, K=6, bootnum = 99), FUN = function(x) x)
+   temp = para_boot_LR(simul, K=6, bootnum = 99)
    return(temp)
 }
 stopCluster(cl)
@@ -563,22 +455,19 @@ stopCluster(cl)
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 simul_comp1h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
   simul = simul_set1h[[simu]]
   temp = find_comp(simul, ini_method = "kmeans")
   return(temp)
 }
 stopCluster(cl)
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 set.seed(200)
 simul_boot1h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set1h[[simu]]
-   temp = sapply(para_boot_LR(simul, K=5, bootnum = 99), FUN = function(x) x)
+   temp = para_boot_LR(simul, K=5, bootnum = 99)
    return(temp)
 }
 stopCluster(cl)
@@ -588,22 +477,19 @@ stopCluster(cl)
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 simul_comp2h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
   simul = simul_set2h[[simu]]
   temp = find_comp(simul, ini_method = "kmeans")
   return(temp)
 }
 stopCluster(cl)
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 set.seed(200)
 simul_boot2h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set2h[[simu]]
-   temp = sapply(para_boot_LR(simul, K=5, bootnum = 99), FUN = function(x) x)
+   temp = para_boot_LR(simul, K=5, bootnum = 99)
    return(temp)
 }
 stopCluster(cl)
@@ -613,22 +499,19 @@ stopCluster(cl)
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 simul_comp3h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
   simul = simul_set3h[[simu]]
   temp = find_comp(simul, ini_method = "kmeans")
   return(temp)
 }
 stopCluster(cl)
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 set.seed(200)
 simul_boot3h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set3h[[simu]]
-   temp = sapply(para_boot_LR(simul, K=5, bootnum = 99), FUN = function(x) x)
+   temp = para_boot_LR(simul, K=5, bootnum = 99)
    return(temp)
 }
 stopCluster(cl)
@@ -638,22 +521,19 @@ stopCluster(cl)
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 simul_comp4h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
   simul = simul_set4h[[simu]]
   temp = find_comp(simul, ini_method = "kmeans")
   return(temp)
 }
 stopCluster(cl)
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 set.seed(200)
 simul_boot4h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set4h[[simu]]
-   temp = sapply(para_boot_LR(simul, K=5, bootnum = 99), FUN = function(x) x)
+   temp = para_boot_LR(simul, K=5, bootnum = 99)
    return(temp)
 }
 stopCluster(cl)
@@ -663,22 +543,19 @@ stopCluster(cl)
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 simul_comp5h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
   simul = simul_set5h[[simu]]
   temp = find_comp(simul, ini_method = "kmeans")
   return(temp)
 }
 stopCluster(cl)
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 set.seed(200)
 simul_boot5h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set5h[[simu]]
-   temp = sapply(para_boot_LR(simul, K=6, bootnum = 99), FUN = function(x) x)
+   temp = para_boot_LR(simul, K=6, bootnum = 99)
    return(temp)
 }
 stopCluster(cl)
@@ -688,38 +565,35 @@ stopCluster(cl)
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 simul_comp6h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
   simul = simul_set6h[[simu]]
   temp = find_comp(simul, ini_method = "kmeans")
   return(temp)
 }
 stopCluster(cl)
-
 ncores = 10
 cl = makeCluster(ncores)
 registerDoParallel(cl)
-
 set.seed(200)
 simul_boot6h = foreach(simu=1:num_simul, .combine = rbind) %dopar% {
    simul = simul_set6h[[simu]]
-   temp = sapply(para_boot_LR(simul, K=6, bootnum = 99), FUN = function(x) x)
+   temp = para_boot_LR(simul, K=6, bootnum = 99)
    return(temp)
 }
 stopCluster(cl)
 ```
 
+
 ```{r}
 # record the result of parametric bootstrap LR tests
-
 result_list_boot = paste0("simul_boot",c(1:6, paste0(1:6,"h")))
 result_list_comp = paste0("simul_comp",c(1:6, paste0(1:6,"h")))
+
 
 dfa0.05 = data.frame("h1" = numeric(0), "h2" = numeric(0), "h3" = numeric(0), "h4" = numeric(0))
 dfa0.1 = data.frame("h1" = numeric(0), "h2" = numeric(0), "h3" = numeric(0), "h4" = numeric(0))
 dfICLh = data.frame("h1" = numeric(0), "h2" = numeric(0), "h3" = numeric(0), "h4" = numeric(0))
 dfcomp = NULL
-
 dfa0.05_1 = dfa0.05
 dfa0.1_1 = dfa0.1
 
@@ -740,16 +614,20 @@ for(i in 1:12){
   dfcomp = rbind(dfcomp, temp$selection)
 }
 
+simul_boot1
 
+ hypo_test(simul_boot1, alpha = 0.05, adj.method = "bonferroni")
+as.data.frame(matrix(simul_boot1 , ncol=10, byrow = F))
+ tab_col = names(simul_boot1 )
+  tab = as.data.frame(matrix(simul_boot1 , ncol=10, byrow = F))
+  colnames(tab) = tab_col
+tab
 
 library(xlsx)
 write.xlsx(cbind(dfa0.05, dfa0.1), file = "simul_bonf.xlsx", sheetName = "hypo", append = FALSE)
 write.xlsx(dfICLh, file = "simul_bonf.xlsx", sheetName = "ICL", append = TRUE)
 write.xlsx(dfcomp, file = "simul_bonf.xlsx", sheetName = "comp", append = TRUE)
-
-
 write.xlsx(cbind(dfa0.05_1, dfa0.1_1), file = "simul_punzo.xlsx", sheetName = "hypo", append = FALSE)
 write.xlsx(dfICLh, file = "simul_punzo.xlsx", sheetName = "ICL", append = TRUE)
 write.xlsx(dfcomp, file = "simul_punzo.xlsx", sheetName = "comp", append = TRUE)
 ```
-
