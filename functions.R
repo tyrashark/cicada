@@ -439,6 +439,7 @@ find_comp <- function(x, K = 3:8, ini_method = "kmeans", max_it = 1e3, tol = 1e-
 }
 
 
+
 hypo_test <- function(tab, alpha = 0.05, adj.method = c("bonferroni", "punzo")){
   
   ##Bonferroni correction
